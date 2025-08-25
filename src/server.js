@@ -18,12 +18,13 @@ const START_SERVER = () => {
   // middleware
   app.use(errorHandlingMiddleware);
 
-  // chay local
+  // // chay local
   // app.listen(port, host, () => {
   //   console.log(`Your server is running at: http://${host}:${port}`);
   // });
 
-  app.listen(process.env.PORT, host, () => {
+  // deploy
+  app.listen(process.env.PORT, () => {
     console.log(`Your server is running at PORT: ${process.env.PORT}`);
   });
 };
