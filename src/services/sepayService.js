@@ -3,7 +3,11 @@ import {orderModel} from "../models/orderModel.js";
 import {parseStringToObjectId} from "../utils/parseStringToObjectId.js";
 
 const checkSepay = async (reqBody) => {
-  const {code, content: orderId, transferType, transferAmount} = reqBody;
+  const {code, content, transferType, transferAmount} = reqBody;
+
+  const parts = content.split(".");
+  const orderId = parts[3];
+  console.log(orderId);
 
   try {
     // Lấy thông tin order trong DB
