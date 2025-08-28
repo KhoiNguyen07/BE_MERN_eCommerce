@@ -9,5 +9,9 @@ orderRoutes
   .post(orderValidation.validValue, orderController.createNew);
 orderRoutes.route("/get-order-by-id").post(orderController.getById);
 orderRoutes
+  .route("/get-order-by-userId")
+  .post(orderController.getOrderByUserId);
+
+orderRoutes
   .route("/update-status-by-id")
   .post(orderController.updateStatusById);

@@ -1,6 +1,7 @@
 import Joi from "joi";
 import {getDB} from "../config/mongo.js";
 import {ObjectId} from "mongodb";
+import {parseStringToObjectId} from "../utils/parseStringToObjectId.js";
 
 // regex validate object_id
 const OBJECT_ID_RULE = /^[0-9a-fA-F]{24}$/;
@@ -37,6 +38,7 @@ const ORDER_COLLECTION_SCHEMA = Joi.object({
     .timestamp("javascript")
     .default(() => Date.now()),
   _destroy: Joi.boolean().default(false),
+  isPayment: Joi.boolean().default(false),
   status: Joi.string().default("pending"),
 });
 
@@ -60,6 +62,19 @@ const findOneById = async (id) => {
   }
 };
 
+const findOneByUserId = async (userId) => {
+  try {
+    const result = await getDB()
+      .collection(ORDER_COLLECTION_NAME)
+      .find({userId: new ObjectId(userId)})
+      .toArray();
+
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 const createNew = async (data) => {
   try {
     // kiem tra co pass qua dc validation hay khong
@@ -67,7 +82,10 @@ const createNew = async (data) => {
     // chuyen huong toi Database
     const createdProduct = await getDB()
       .collection(ORDER_COLLECTION_NAME)
-      .insertOne(validData);
+      .insertOne({
+        ...validData,
+        userId: parseStringToObjectId(validData.userId),
+      });
     // tra data ve cho service
     return createdProduct;
   } catch (error) {
@@ -75,7 +93,7 @@ const createNew = async (data) => {
   }
 };
 
-const updateStatusById = async (orderId, value) => {
+const updateStatusByorderId = async (orderId, value) => {
   try {
     const result = await getDB()
       .collection(ORDER_COLLECTION_NAME)
@@ -93,8 +111,28 @@ const updateStatusById = async (orderId, value) => {
   }
 };
 
+const updateIsPaymentByOrderId = async (orderId, value) => {
+  try {
+    const result = await getDB()
+      .collection(ORDER_COLLECTION_NAME)
+      .updateOne(
+        {
+          _id: new ObjectId(orderId),
+        },
+        {
+          $set: {isPayment: value},
+        }
+      );
+    return result.modifiedCount;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const orderModel = {
   findOneById,
   createNew,
-  updateStatusById,
+  updateStatusByorderId,
+  updateIsPaymentByOrderId,
+  findOneByUserId,
 };

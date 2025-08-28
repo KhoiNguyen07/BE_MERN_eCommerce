@@ -1,5 +1,5 @@
 import {orderModel} from "../models/orderModel.js";
-
+import {cartModel} from "../models/cartModel.js";
 const createNew = async (reqBody) => {
   try {
     // chuyen huong toi model
@@ -9,7 +9,7 @@ const createNew = async (reqBody) => {
     const getNewOrder = await orderModel.findOneById(result.insertedId);
 
     // clear list cart
-    // await cartModel.deleteAllCart();
+    await cartModel.deleteAllCart();
     // tra data ve controller
     return getNewOrder;
   } catch (error) {
@@ -26,11 +26,22 @@ const getById = async ({id}) => {
     throw error;
   }
 };
+
+const getOrderByUserId = async ({userId}) => {
+  try {
+    // chuyen huong toi model
+    const result = await orderModel.findOneByUserId(userId);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const updateStatusById = async (reqBody) => {
   const {id, value} = reqBody;
   try {
     // chuyen huong toi model
-    const result = await orderModel.updateStatusById(id, value);
+    const result = await orderModel.updateStatusByorderId(id, value);
     return result;
   } catch (error) {
     throw error;
@@ -41,4 +52,5 @@ export const orderService = {
   createNew,
   getById,
   updateStatusById,
+  getOrderByUserId,
 };

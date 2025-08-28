@@ -33,10 +33,10 @@ const checkSepay = async (reqBody) => {
     await historyTransfersModel.createNew(newSepay);
 
     // Cập nhật trạng thái order
-    await orderModel.updateStatusById(
-      orderId,
-      isSuccess ? "completed" : "cancel"
-    );
+    await orderModel.updateIsPaymentByOrderId(orderId, isSuccess);
+    if (isSuccess) {
+      await orderModel.updateStatusByorderId(orderId, "shipping");
+    }
 
     return isSuccess;
   } catch (error) {
