@@ -13,7 +13,7 @@ const START_SERVER = () => {
   app.use(cors());
   // use api
   app.use(express.json());
-  app.use("/", API);
+  app.use("/shoes-shop", API);
 
   // middleware
   app.use(errorHandlingMiddleware);

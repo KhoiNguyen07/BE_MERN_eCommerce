@@ -26,7 +26,7 @@ const login = async (req, res, next) => {
     if (userAccount && userAccount._destroy == false) {
       res
         .status(StatusCodes.OK)
-        .json({...userAccount, message: "Login successfully!"});
+        .json({...userAccount, message: "Login successfully!", password: ""});
     } else {
       res
         .status(StatusCodes.UNAUTHORIZED)
