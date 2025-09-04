@@ -7,7 +7,9 @@ const createNew = async (req, res, next) => {
     const result = await commentService.createNew(req.body);
 
     // tra data ve client
-    res.status(StatusCodes.CREATED).json(result);
+    res
+      .status(StatusCodes.CREATED)
+      .json({...result, message: "Create successfully!"});
   } catch (error) {
     next(error);
   }

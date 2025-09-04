@@ -3,6 +3,7 @@ import {getDB} from "../config/mongo.js";
 import {ObjectId} from "mongodb";
 import {parseStringToObjectId} from "../utils/parseStringToObjectId.js";
 import {parseObjectIdToString} from "../utils/parseObjectIdToString.js";
+import {userModel} from "./userModel.js";
 
 // regex validate object_id
 const OBJECT_ID_RULE = /^[0-9a-fA-F]{24}$/;
@@ -25,8 +26,11 @@ const validateBeforeCreate = async (data) => {
     abortEarly: false,
   });
 
+  const userInfo = await userModel.findOneById(data.userId);
+
   const dataReturn = {
     ...validData,
+    username: userInfo.username,
     productId: parseStringToObjectId(data.productId),
     userId: parseStringToObjectId(data.userId),
   };
