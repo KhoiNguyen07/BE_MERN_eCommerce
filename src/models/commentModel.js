@@ -90,7 +90,7 @@ const deleteCommentById = async (commentId, userId) => {
     const isOwn = await isOwnComment(commentId, userId);
 
     if (!isOwn) {
-      return {success: false, message: "You have permission!"};
+      return {success: false, message: "You don't have permission!"};
     }
 
     const result = await getDB()
